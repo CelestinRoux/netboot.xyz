@@ -27,7 +27,7 @@ set harvester_url https://releases.rancher.com/harvester/v1.4.0
 set harvester_config_url https://www.timactive.com/harvester/config-create.yaml
 set os_arch amd64
 set install_params harvester.install.automatic=true harvester.install.config_url=${harvester_config_url}
-set boot_params ip=dhcp net.ifnames=1 console=ttyS0 console=tty1 rd.cos.disable root=live:${harvester_url}/harvester-rootfs-${os_arch}.squashfs rd.noverifyssl debug
+console=ttyS0 console=tty1 rd.cos.disable root=live:${harvester_url}/harvester-rootfs-${os_arch}.squashfs rd.debug rd.shell rd.noverifyssl
 
 imgfree
 
