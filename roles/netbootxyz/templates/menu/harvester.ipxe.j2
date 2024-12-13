@@ -33,6 +33,7 @@ goto harvester
 {% if value.os == "harvester" %}
 :harvester_url
 set harvester_url ${live_endpoint}{{ value.path }}
+echo Current harvester_url: ${harvester_url}
 goto harvester_boot
 {% endif %}
 {% endfor %}
