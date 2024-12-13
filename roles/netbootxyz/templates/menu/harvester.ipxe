@@ -27,9 +27,24 @@ set harvester_url https://releases.rancher.com/harvester/v1.4.0
 set harvester_config_url https://www.timactive.com/harvester/config-create.yaml
 set os_arch amd64
 set install_params harvester.install.automatic=true harvester.install.config_url=${harvester_config_url}
-set boot_params ip=dhcp net.ifnames=1 console=ttyS0 console=tty1 rd.cos.disable root=live:${harvester_url}/harvester-rootfs-${os_arch}.squashfs rd.noverifyssl
+set boot_params ip=dhcp net.ifnames=1 console=ttyS0 console=tty1 rd.cos.disable root=live:${harvester_url}/harvester-rootfs-${os_arch}.squashfs rd.noverifyssl debug
 
 imgfree
+
+echo Debugging iPXE Script
+echo harvester_url=${harvester_url}
+echo os_arch=${os_arch}
+echo install_params=${install_params}
+echo boot_params=${boot_params}
+prompt
+
+echo Testing access to kernel and initrd
+imgfetch ${harvester_url}/harvester-v1.4.0-vmlinuz-${os_arch}
+echo Kernel fetched successfully!
+imgfetch ${harvester_url}/harvester-v1.4.0-initrd-${os_arch}
+echo Initrd fetched successfully!
+
+echo Loading kernel and initrd...
 kernel ${harvester_url}/harvester-v1.4.0-vmlinuz-${os_arch} ${install_params} ${boot_params}
 initrd ${harvester_url}/harvester-v1.4.0-initrd-${os_arch}
 boot
