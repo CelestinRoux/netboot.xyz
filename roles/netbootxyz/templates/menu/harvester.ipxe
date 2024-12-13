@@ -1,0 +1,39 @@
+#!ipxe
+
+# Harvester
+# https://harvesterhci.io/
+# https://docs.harvesterhci.io/v1.0/install/pxe-boot-install/
+
+goto menu ||
+
+:menu
+menu Harvester Installer
+item harvester_install Install Harvester v1.4.0
+item harvester_config_url Set config-create or config-join.yaml URL
+item exit Exit
+choose --timeout 3000 --default harvester_install selection || goto exit
+
+iseq ${selection} harvester_install && goto harvester_install ||
+iseq ${selection} harvester_config_url && goto harvester_config_url ||
+goto exit
+
+:harvester_config_url
+echo -n Enter config.yaml URL: && read harvester_config_url
+echo Config URL set to: ${harvester_config_url}
+goto menu
+
+:harvester_install
+set harvester_url https://releases.rancher.com/harvester/v1.4.0
+set harvester_config_url https://www.timactive.com/harvester/config-create.yaml
+set os_arch amd64
+set install_params harvester.install.automatic=true harvester.install.config_url=${harvester_config_url}
+set boot_params ip=dhcp net.ifnames=1 console=ttyS0 console=tty1 rd.cos.disable root=live:${harvester_url}/harvester-rootfs-${os_arch}.squashfs rd.noverifyssl
+
+imgfree
+kernel ${harvester_url}/harvester-v1.4.0-vmlinuz-${os_arch} ${install_params} ${boot_params}
+initrd ${harvester_url}/harvester-v1.4.0-initrd-${os_arch}
+boot
+
+:exit
+echo Exiting...
+exit
